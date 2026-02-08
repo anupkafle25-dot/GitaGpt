@@ -1,0 +1,2277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna AI – Bhagavad Gita AI Companion</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&family=Noto+Serif+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sky-light: #e0f2fe;
+            --sky-mid: #7dd3fc;
+            --sky-deep: #0ea5e9;
+            --sky-darker: #0369a1;
+            --saffron: #f59e0b;
+            --saffron-deep: #d97706;
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --glass-shadow: 0 8px 32px rgba(14, 165, 233, 0.12);
+            --text-dark: #1e293b;
+            --text-mid: #475569;
+            --text-light: #94a3b8;
+        }
+
+        /* ============ DARK THEME ============ */
+        [data-theme="dark"] {
+            --sky-light: #1e293b;
+            --sky-mid: #334155;
+            --sky-deep: #38bdf8;
+            --sky-darker: #7dd3fc;
+            --saffron: #fbbf24;
+            --saffron-deep: #f59e0b;
+            --glass-bg: rgba(30, 41, 59, 0.65);
+            --glass-border: rgba(71, 85, 105, 0.5);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            --text-dark: #f1f5f9;
+            --text-mid: #cbd5e1;
+            --text-light: #94a3b8;
+        }
+
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #0f172a 50%, #1e293b 75%, #0f172a 100%);
+        }
+
+        [data-theme="dark"] .landing-card {
+            background: rgba(30, 41, 59, 0.75);
+            border-color: rgba(71, 85, 105, 0.5);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(71, 85, 105, 0.3) inset;
+        }
+
+        [data-theme="dark"] .landing-card input {
+            background: rgba(51, 65, 85, 0.6);
+            border-color: rgba(56, 189, 248, 0.25);
+            color: var(--text-dark);
+        }
+
+        [data-theme="dark"] .landing-card input:focus {
+            background: rgba(51, 65, 85, 0.8);
+            border-color: var(--sky-deep);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+        }
+
+        [data-theme="dark"] .landing-card input::placeholder {
+            color: var(--text-light);
+        }
+
+        [data-theme="dark"] .chat-header {
+            background: rgba(30, 41, 59, 0.8);
+            border-bottom-color: rgba(71, 85, 105, 0.4);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="dark"] .message.ai .message-bubble {
+            background: rgba(30, 41, 59, 0.7);
+            border-color: rgba(71, 85, 105, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            color: var(--text-dark);
+        }
+
+        [data-theme="dark"] .message.user .message-bubble {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.7), rgba(14, 165, 233, 0.7));
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        [data-theme="dark"] .verse-card {
+            background: rgba(30, 41, 59, 0.65);
+            border-color: rgba(71, 85, 105, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(71, 85, 105, 0.2) inset;
+        }
+
+        [data-theme="dark"] .verse-sanskrit {
+            background: rgba(245, 158, 11, 0.08);
+            border-color: rgba(245, 158, 11, 0.15);
+        }
+
+        [data-theme="dark"] .verse-translation {
+            background: rgba(56, 189, 248, 0.08);
+            color: var(--text-dark);
+        }
+
+        [data-theme="dark"] .verse-advice {
+            background: rgba(30, 41, 59, 0.5);
+            color: var(--text-dark);
+        }
+
+        [data-theme="dark"] .input-area {
+            background: rgba(30, 41, 59, 0.8);
+            border-top-color: rgba(71, 85, 105, 0.4);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        [data-theme="dark"] .text-input {
+            background: rgba(51, 65, 85, 0.6);
+            border-color: rgba(56, 189, 248, 0.2);
+            color: var(--text-dark);
+        }
+
+        [data-theme="dark"] .text-input:focus {
+            background: rgba(51, 65, 85, 0.8);
+            border-color: var(--sky-deep);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+        }
+
+        [data-theme="dark"] .text-input::placeholder {
+            color: var(--text-light);
+        }
+
+        [data-theme="dark"] .premade-btn {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(71, 85, 105, 0.5);
+            color: var(--text-mid);
+        }
+
+        [data-theme="dark"] .premade-btn:hover {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: var(--sky-deep);
+            color: var(--sky-darker);
+        }
+
+        [data-theme="dark"] .header-action-btn {
+            background: rgba(51, 65, 85, 0.5);
+            border-color: rgba(71, 85, 105, 0.5);
+            color: var(--text-mid);
+        }
+
+        [data-theme="dark"] .header-action-btn:hover {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: var(--sky-deep);
+            color: var(--sky-darker);
+        }
+
+        [data-theme="dark"] .toast {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: rgba(56, 189, 248, 0.3);
+            color: var(--text-dark);
+        }
+
+        [data-theme="dark"] .modal-overlay {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="dark"] .modal-card {
+            background: rgba(30, 41, 59, 0.85);
+            border-color: rgba(71, 85, 105, 0.6);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(71, 85, 105, 0.3) inset;
+        }
+
+        [data-theme="dark"] .modal-close {
+            background: rgba(51, 65, 85, 0.5);
+            border-color: rgba(71, 85, 105, 0.5);
+            color: var(--text-mid);
+        }
+
+        [data-theme="dark"] .dev-name,
+        [data-theme="dark"] .dev-bio {
+            color: var(--text-dark);
+        }
+
+        [data-theme="dark"] .dev-bio {
+            color: var(--text-mid);
+        }
+
+        [data-theme="dark"] .error-card {
+            background: rgba(127, 29, 29, 0.15);
+            border-color: rgba(239, 68, 68, 0.25);
+        }
+
+        [data-theme="dark"] .welcome-text {
+            color: var(--text-dark);
+        }
+
+        [data-theme="dark"] .welcome-text strong {
+            color: var(--sky-darker);
+        }
+
+        [data-theme="dark"] .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(56, 189, 248, 0.25);
+        }
+
+        [data-theme="dark"] .mandala {
+            border-color: rgba(56, 189, 248, 0.1);
+        }
+
+        [data-theme="dark"] .mandala:nth-child(2) {
+            border-color: rgba(245, 158, 11, 0.08);
+        }
+
+        [data-theme="dark"] #landing-page::before {
+            background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.06) 0%, transparent 70%);
+        }
+
+        [data-theme="dark"] .landing-card h1,
+        [data-theme="dark"] .landing-card p {
+            color: var(--text-mid);
+        }
+
+        [data-theme="dark"] .landing-card h1 {
+            color: var(--text-dark) !important;
+        }
+
+        [data-theme="dark"] .start-btn {
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+            box-shadow: 0 4px 20px rgba(56, 189, 248, 0.3);
+        }
+
+        [data-theme="dark"] .start-btn:hover {
+            box-shadow: 0 8px 30px rgba(56, 189, 248, 0.45);
+        }
+
+        [data-theme="dark"] .om-symbol {
+            text-shadow: 0 0 40px rgba(251, 191, 36, 0.4);
+        }
+
+        [data-theme="dark"] .particle {
+            opacity: 0.6;
+        }
+
+        [data-theme="dark"] .premade-label {
+            color: var(--text-light);
+        }
+
+        [data-theme="dark"] .premade-scroll::-webkit-scrollbar-thumb {
+            background: rgba(56, 189, 248, 0.25);
+        }
+
+        [data-theme="dark"] .header-info h2 {
+            color: var(--text-dark);
+        }
+
+        [data-theme="dark"] .header-info p {
+            color: var(--text-mid);
+        }
+
+        [data-theme="dark"] .message-name {
+            color: var(--text-light);
+        }
+
+        [data-theme="dark"] .verse-transliteration {
+            color: var(--text-mid);
+            border-bottom-color: rgba(56, 189, 248, 0.15);
+        }
+
+        [data-theme="dark"] .verse-label {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(251, 191, 36, 0.08));
+            border-color: rgba(251, 191, 36, 0.25);
+        }
+
+        [data-theme="dark"] .verse-reference {
+            color: var(--text-light);
+        }
+
+        [data-theme="dark"] .verse-advice-label {
+            color: var(--saffron-deep);
+        }
+
+        [data-theme="dark"] .verse-card::before {
+            color: rgba(251, 191, 36, 0.08);
+        }
+
+        [data-theme="dark"] .mic-btn {
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3);
+        }
+
+        [data-theme="dark"] .send-btn {
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+        }
+
+        [data-theme="dark"] .cancel-speech {
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        [data-theme="dark"] .speech-status {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-size: 12px;
+            color: var(--text-mid);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans', sans-serif;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(14, 165, 233, 0.1);
+            border-color: var(--sky-deep);
+            color: var(--sky-darker);
+            transform: translateY(-1px);
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            background: rgba(51, 65, 85, 0.5);
+            border-color: rgba(71, 85, 105, 0.5);
+            color: var(--text-mid);
+        }
+
+        [data-theme="dark"] .theme-toggle:hover {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: var(--sky-deep);
+            color: var(--sky-darker);
+        }
+
+        .theme-icon {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 25%, #bae6fd 50%, #7dd3fc 75%, #38bdf8 100%);
+            background-attachment: fixed;
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.4s ease, color 0.3s ease;
+        }
+
+        .sanskrit-font {
+            font-family: 'Noto Serif Devanagari', serif;
+        }
+
+        /* ============ GLASSMORPHISM UTILS ============ */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 8px 40px rgba(14, 165, 233, 0.15);
+        }
+
+        /* ============ LANDING PAGE ============ */
+        #landing-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #landing-page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(14, 165, 233, 0.08) 0%, transparent 70%);
+            animation: pulseGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .mandala {
+            position: absolute;
+            border-radius: 50%;
+            border: 1.5px solid rgba(14, 165, 233, 0.15);
+            animation: rotateMandala 60s linear infinite;
+        }
+
+        .mandala:nth-child(1) { width: 500px; height: 500px; }
+        .mandala:nth-child(2) {
+            width: 400px; height: 400px;
+            border-color: rgba(245, 158, 11, 0.12);
+            animation-duration: 45s;
+            animation-direction: reverse;
+        }
+        .mandala:nth-child(3) {
+            width: 300px; height: 300px;
+            border-color: rgba(14, 165, 233, 0.1);
+            animation-duration: 30s;
+        }
+
+        @keyframes rotateMandala {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .om-symbol {
+            font-size: 80px;
+            color: var(--saffron);
+            text-shadow: 0 0 40px rgba(245, 158, 11, 0.3);
+            animation: floatOm 3s ease-in-out infinite;
+        }
+
+        @keyframes floatOm {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .landing-card {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 28px;
+            padding: 48px 40px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 25px 60px rgba(14, 165, 233, 0.12), 0 0 0 1px rgba(255,255,255,0.3) inset;
+        }
+
+        .landing-card input {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1.5px solid rgba(14, 165, 233, 0.25);
+            border-radius: 14px;
+            padding: 16px 20px;
+            width: 100%;
+            color: var(--text-dark);
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans', sans-serif;
+        }
+
+        .landing-card input:focus {
+            border-color: var(--sky-deep);
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.15);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .landing-card input::placeholder {
+            color: var(--text-light);
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, var(--sky-deep), var(--sky-darker));
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            padding: 16px 40px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 16px;
+            font-family: 'Noto Sans', sans-serif;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(14, 165, 233, 0.4);
+        }
+
+        .start-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ============ CHAT PAGE ============ */
+        #chat-page {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .chat-header {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            z-index: 100;
+            flex-shrink: 0;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.06);
+        }
+
+        .header-avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--saffron), var(--saffron-deep));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);
+            overflow: hidden;
+        }
+
+        .header-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .header-info h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .header-info p {
+            font-size: 12px;
+            color: var(--text-mid);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Header buttons */
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-action-btn {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            padding: 8px 14px;
+            font-size: 12px;
+            color: var(--text-mid);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans', sans-serif;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .header-action-btn:hover {
+            background: rgba(14, 165, 233, 0.1);
+            border-color: var(--sky-deep);
+            color: var(--sky-darker);
+            transform: translateY(-1px);
+        }
+
+        .header-action-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        /* userGreeting removed — replaced by theme toggle */
+
+        /* Chat Messages Area */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(14, 165, 233, 0.2);
+            border-radius: 4px;
+        }
+
+        /* Message Bubbles */
+        .message {
+            margin-bottom: 20px;
+            max-width: 85%;
+        }
+
+        .message.animate-in {
+            animation: fadeInUp 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.ai { margin-right: auto; }
+        .message.user { margin-left: auto; }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .message.ai .message-avatar {
+            background: linear-gradient(135deg, var(--saffron), var(--saffron-deep));
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+            overflow: hidden;
+        }
+
+        .message.ai .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, var(--sky-deep), var(--sky-darker));
+            color: #fff;
+            font-weight: 600;
+            font-size: 13px;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.2);
+        }
+
+        .message-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .message-bubble {
+            border-radius: 18px;
+            padding: 16px 20px;
+            line-height: 1.65;
+            font-size: 15px;
+        }
+
+        .message.ai .message-bubble {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-top-left-radius: 4px;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.06);
+            color: var(--text-dark);
+        }
+
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.85), rgba(3, 105, 161, 0.85));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-top-right-radius: 4px;
+            text-align: right;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.15);
+        }
+
+        /* ============ VERSE CARD (Glassmorphism) ============ */
+        .verse-card {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.65);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 12px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(14, 165, 233, 0.08), 0 0 0 1px rgba(255,255,255,0.2) inset;
+        }
+
+        .verse-card::before {
+            content: '॥';
+            position: absolute;
+            top: -15px;
+            right: 10px;
+            font-size: 80px;
+            color: rgba(245, 158, 11, 0.06);
+            font-family: 'Noto Serif Devanagari', serif;
+            pointer-events: none;
+        }
+
+        .verse-label {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.08));
+            color: var(--saffron-deep);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .verse-sanskrit {
+            font-family: 'Noto Serif Devanagari', serif;
+            font-size: 20px;
+            color: var(--saffron-deep);
+            line-height: 1.8;
+            margin-bottom: 14px;
+            font-weight: 600;
+            padding: 16px;
+            background: rgba(245, 158, 11, 0.04);
+            border-radius: 14px;
+            border: 1px solid rgba(245, 158, 11, 0.1);
+        }
+
+        .verse-transliteration {
+            font-style: italic;
+            color: var(--text-mid);
+            font-size: 14px;
+            margin-bottom: 14px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(14, 165, 233, 0.1);
+            line-height: 1.7;
+        }
+
+        .verse-translation {
+            color: var(--text-dark);
+            font-size: 15px;
+            margin-bottom: 16px;
+            line-height: 1.75;
+            font-weight: 400;
+            padding: 14px 16px;
+            background: rgba(14, 165, 233, 0.04);
+            border-radius: 12px;
+            border-left: 3px solid var(--sky-deep);
+        }
+
+        .verse-advice {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border-left: 3px solid var(--saffron);
+            padding: 16px 18px;
+            border-radius: 0 14px 14px 0;
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.75;
+            box-shadow: 0 2px 12px rgba(245, 158, 11, 0.06);
+        }
+
+        .verse-advice-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--saffron-deep);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .verse-reference {
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 12px;
+            font-weight: 600;
+        }
+
+        /* ============ TYPING INDICATOR ============ */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--sky-deep);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.3; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* ============ PREMADE QUESTIONS ============ */
+        .premade-section {
+            padding: 6px 20px 14px;
+            flex-shrink: 0;
+            overflow: visible;
+        }
+
+        .premade-label {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .premade-scroll {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 6px 4px 10px 4px;
+            scroll-snap-type: x mandatory;
+            overflow-y: visible;
+        }
+
+        .premade-scroll::-webkit-scrollbar { height: 3px; }
+        .premade-scroll::-webkit-scrollbar-thumb {
+            background: rgba(14, 165, 233, 0.2);
+            border-radius: 3px;
+        }
+
+        .premade-btn {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 22px;
+            padding: 10px 18px;
+            color: var(--text-mid);
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Noto Sans', sans-serif;
+            scroll-snap-align: start;
+            box-shadow: 0 2px 10px rgba(14, 165, 233, 0.06);
+            font-weight: 500;
+            flex-shrink: 0;
+            transform-origin: center bottom;
+        }
+
+        .premade-btn:hover {
+            background: rgba(14, 165, 233, 0.12);
+            border-color: var(--sky-deep);
+            color: var(--sky-darker);
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.15);
+        }
+
+        .premade-btn:active {
+            transform: translateY(-1px) scale(1.01);
+        }
+
+        .premade-btn .emoji { margin-right: 4px; }
+
+        /* ============ INPUT AREA ============ */
+        .input-area {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            box-shadow: 0 -4px 20px rgba(14, 165, 233, 0.04);
+        }
+
+        .text-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .text-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.65);
+            border: 1.5px solid rgba(14, 165, 233, 0.2);
+            border-radius: 24px;
+            padding: 14px 20px;
+            color: var(--text-dark);
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans', sans-serif;
+        }
+
+        .text-input:focus {
+            border-color: var(--sky-deep);
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.1);
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .text-input::placeholder {
+            color: var(--text-light);
+        }
+
+        /* Mic Button */
+        .mic-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--saffron), var(--saffron-deep));
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            flex-shrink: 0;
+            box-shadow: 0 4px 20px rgba(255, 216, 20, 0.25);
+        }
+
+        .mic-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 30px rgba(245, 158, 11, 0.4);
+        }
+
+        .mic-btn.recording {
+            animation: micPulse 1.5s infinite;
+            background: linear-gradient(135deg, #ff0000, #ff0000);
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.35);
+        }
+
+        @keyframes micPulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.45); }
+            70% { box-shadow: 0 0 0 18px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .mic-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: white;
+        }
+
+        .send-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--sky-deep), var(--sky-darker));
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.25);
+        }
+
+        .send-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 25px rgba(14, 165, 233, 0.4);
+        }
+
+        .send-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        /* Speech Status */
+        .speech-status {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: 14px;
+            flex: 1;
+            font-size: 14px;
+            color: #dc2626;
+            font-weight: 500;
+        }
+
+        .speech-status.active { display: flex; }
+
+        .speech-waves {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 20px;
+        }
+
+        .speech-wave {
+            width: 3px;
+            background: #ef4444;
+            border-radius: 2px;
+            animation: waveAnim 0.8s infinite ease-in-out;
+        }
+
+        .speech-wave:nth-child(1) { height: 8px; animation-delay: 0s; }
+        .speech-wave:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+        .speech-wave:nth-child(3) { height: 20px; animation-delay: 0.2s; }
+        .speech-wave:nth-child(4) { height: 14px; animation-delay: 0.3s; }
+        .speech-wave:nth-child(5) { height: 8px; animation-delay: 0.4s; }
+
+        @keyframes waveAnim {
+            0%, 100% { transform: scaleY(0.5); }
+            50% { transform: scaleY(1); }
+        }
+
+        .cancel-speech {
+            background: none;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #dc2626;
+            border-radius: 8px;
+            padding: 4px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Noto Sans', sans-serif;
+            font-weight: 500;
+        }
+
+        .cancel-speech:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Particles */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Welcome message */
+        .welcome-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-dark);
+        }
+
+        .welcome-text strong {
+            color: var(--sky-darker);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .landing-card { padding: 36px 24px; }
+            .om-symbol { font-size: 60px; }
+            .message { max-width: 93%; }
+            .verse-sanskrit { font-size: 17px; }
+            .verse-card { padding: 18px; }
+            .header-actions { gap: 6px; }
+            .header-action-btn span.btn-label { display: none; }
+            .theme-toggle .btn-label { display: none; }
+            .header-action-btn { padding: 8px 10px; }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            color: var(--text-dark);
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1000;
+            transition: transform 0.4s ease;
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            box-shadow: 0 8px 30px rgba(14, 165, 233, 0.12);
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.error {
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #dc2626;
+        }
+
+        /* Fade in */
+        .fade-in { animation: fadeIn 0.6s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @keyframes floatParticle {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.15; }
+            25% { transform: translateY(-25px) translateX(12px); opacity: 0.4; }
+            50% { transform: translateY(-50px) translateX(-8px); opacity: 0.2; }
+            75% { transform: translateY(-25px) translateX(18px); opacity: 0.35; }
+        }
+
+        /* Error card */
+        .error-card {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #b91c1c;
+            line-height: 1.6;
+        }
+
+        .error-card strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 13px;
+            color: #dc2626;
+        }
+
+        /* Lotus decoration for landing */
+        .lotus-decor {
+            position: absolute;
+            opacity: 0.06;
+            font-size: 120px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .lotus-decor.lt { top: 10%; left: 5%; transform: rotate(-15deg); }
+        .lotus-decor.rb { bottom: 8%; right: 5%; transform: rotate(20deg); }
+
+        /* ============ DEVELOPER MODAL ============ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.35);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 28px;
+            padding: 40px 36px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 25px 80px rgba(14, 165, 233, 0.15), 0 0 0 1px rgba(255,255,255,0.3) inset;
+            animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(14, 165, 233, 0.15);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text-mid);
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #dc2626;
+        }
+
+        .dev-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--sky-deep), var(--sky-darker));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            box-shadow: 0 8px 30px rgba(14, 165, 233, 0.25);
+        }
+
+        .dev-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .dev-title {
+            font-size: 13px;
+            color: var(--sky-darker);
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .dev-bio {
+            font-size: 14px;
+            color: var(--text-mid);
+            line-height: 1.7;
+            margin-bottom: 24px;
+            padding: 0 10px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .social-link:hover {
+            transform: translateY(-4px) scale(1.08);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .social-link.instagram {
+            background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+
+        .social-link.facebook {
+            background: linear-gradient(135deg, #4267B2, #3b5998);
+        }
+
+        .social-link.tiktok {
+            background: linear-gradient(135deg, #010101, #25f4ee);
+        }
+
+        .social-link svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .social-label {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 6px;
+        }
+
+        .dev-footer {
+            font-size: 11px;
+            color: var(--text-light);
+            padding-top: 16px;
+            border-top: 1px solid rgba(14, 165, 233, 0.1);
+        }
+
+        /* ============ CLEAR CHAT BTN ============ */
+        .clear-chat-btn {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #dc2626;
+        }
+
+        .clear-chat-btn:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #b91c1c;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- ============ DEVELOPER MODAL ============ -->
+    <div class="modal-overlay" id="devModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeDevModal()">✕</button>
+            <div class="dev-avatar">👨‍💻</div>
+            <div class="dev-name">Anup Kafle</div>
+            <div class="dev-title">Full-Stack Developer & Video Editor</div>
+            <div class="dev-bio">
+                Passionate about blending ancient wisdom with modern technology. 
+                Built Lord Krishna AI to make the timeless teachings of the Bhagavad Gita 
+                accessible to everyone through the power of AI and voice interaction.
+            </div>
+            <div class="social-links">
+                <a href="https://www.instagram.com/anup.ae" target="_blank" rel="noopener noreferrer" class="social-link instagram" title="Instagram">
+                    <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                </a>
+                <a href="https://www.facebook.com/anup.ae" target="_blank" rel="noopener noreferrer" class="social-link facebook" title="Facebook">
+                    <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </a>
+                <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" class="social-link tiktok" title="TikTok">
+                    <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                </a>
+            </div>
+            <div class="dev-footer">
+                Made with 🙏 and ❤️ for spiritual seekers everywhere
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ LANDING PAGE ============ -->
+    <div id="landing-page">
+        <button class="theme-toggle" id="landingThemeToggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode" style="position:absolute;top:20px;right:20px;z-index:50;">
+            <span class="theme-icon" id="landingThemeIcon">🌙</span>
+            <span class="btn-label" id="landingThemeLabel">Dark</span>
+        </button>
+        <div class="mandala"></div>
+        <div class="mandala"></div>
+        <div class="mandala"></div>
+
+        <div class="lotus-decor lt sanskrit-font">🪷</div>
+        <div class="lotus-decor rb sanskrit-font">🪷</div>
+
+        <div class="landing-card">
+            <div class="om-symbol sanskrit-font">ॐ</div>
+            <h1 style="font-size: 28px; font-weight: 700; color: var(--text-dark); margin: 16px 0 6px;">Lord Krishna AI</h1>
+            <p style="color: var(--text-mid); font-size: 14px; margin-bottom: 6px;">Bhagavad Gita AI Companion</p>
+            <p class="sanskrit-font" style="color: var(--saffron-deep); font-size: 16px; margin-bottom: 28px; opacity: 0.85;">
+                योगस्थः कुरु कर्माणि
+            </p>
+            <p style="color: var(--text-mid); font-size: 14px; margin-bottom: 20px; line-height: 1.65;">
+                Seek timeless wisdom from the Bhagavad Gita.<br>Speak your heart, receive divine guidance.
+            </p>
+
+            <input type="text" id="nameInput" placeholder="Enter your name, seeker..." autocomplete="off" maxlength="30">
+            <button class="start-btn" id="startBtn" onclick="startJourney()">
+                Begin Your Journey
+            </button>
+            <p style="color: var(--text-light); font-size: 11px; margin-top: 14px;">
+                Voice-powered • AI guidance • Built by Anup Kafle
+            </p>
+        </div>
+    </div>
+
+    <!-- ============ CHAT PAGE ============ -->
+    <div id="chat-page">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="header-avatar"><img src="images/krishna.png" alt="Krishna" onerror="this.onerror=null;this.parentElement.innerHTML='🙏';"></div>
+            <div class="header-info">
+                <h2>Shree Krishna</h2>
+                <p><span class="status-dot"></span>Always here to guide you</p>
+            </div>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+                    <span class="theme-icon" id="themeIcon">🌙</span>
+                    <span class="btn-label" id="themeLabel">Dark</span>
+                </button>
+                <button class="header-action-btn" onclick="openDevModal()" title="About Developer">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    <span class="btn-label">About</span>
+                </button>
+                <button class="header-action-btn clear-chat-btn" onclick="clearChatHistory()" title="Clear Chat">
+                    <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                    <span class="btn-label">Clear</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chatMessages"></div>
+
+        <!-- Premade Questions -->
+        <div class="premade-section" id="premadeSection">
+            <div class="premade-label">✨ Quick Guidance</div>
+            <div class="premade-scroll">
+                <button class="premade-btn" onclick="askPremade('stress')"><span class="emoji">😰</span> Stress & Anxiety</button>
+                <button class="premade-btn" onclick="askPremade('anger')"><span class="emoji">😤</span> Anger & Frustration</button>
+                <button class="premade-btn" onclick="askPremade('career')"><span class="emoji">🎯</span> Career & Purpose</button>
+                <button class="premade-btn" onclick="askPremade('attachment')"><span class="emoji">💔</span> Attachment & Loss</button>
+                <button class="premade-btn" onclick="askPremade('motivation')"><span class="emoji">💪</span> Motivation & Laziness</button>
+                <button class="premade-btn" onclick="askPremade('confusion')"><span class="emoji">🤔</span> Confusion & Doubt</button>
+                <button class="premade-btn" onclick="askPremade('peace')"><span class="emoji">🕊️</span> Inner Peace</button>
+                <button class="premade-btn" onclick="askPremade('fear')"><span class="emoji">😨</span> Fear & Worry</button>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <div class="text-input-wrapper" id="textInputWrapper">
+                <input type="text" class="text-input" id="textInput" placeholder="Ask your question or speak..." autocomplete="off">
+            </div>
+
+            <div class="speech-status" id="speechStatus">
+                <div class="speech-waves">
+                    <div class="speech-wave"></div>
+                    <div class="speech-wave"></div>
+                    <div class="speech-wave"></div>
+                    <div class="speech-wave"></div>
+                    <div class="speech-wave"></div>
+                </div>
+                <span>Listening...</span>
+                <button class="cancel-speech" onclick="cancelSpeech()">Cancel</button>
+            </div>
+
+            <button class="mic-btn" id="micBtn" onclick="toggleVoice()" title="Voice input">
+                <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </button>
+
+            <button class="send-btn" id="sendBtn" onclick="sendTextMessage()" title="Send message">
+                <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ============ CONFIG ============
+        const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+        const API_KEY = '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';
+        const MODEL = 'openai/gpt-4o-mini';
+
+        // ============ STORAGE KEYS ============
+        const STORAGE_KEYS = {
+            userName: 'krishna_wisdom_user_name',
+            chatHistory: 'krishna_wisdom_chat_history',
+            chatDOM: 'krishna_wisdom_chat_dom',
+            micGranted: 'krishna_wisdom_mic_granted'
+        };
+
+        // ============ STATE ============
+        let userName = '';
+        let isRecording = false;
+        let recognition = null;
+        let isProcessing = false;
+        let chatHistory = [];
+        let micPermissionGranted = false;
+
+        // ============ BHAGAVAD GITA VERSE DATABASE ============
+        const bgVerses = [
+            // ---- STRESS / ANXIETY / PEACE ----
+            { chapter: 2, verse: 47, sanskrit: "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।\nमा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥", transliteration: "Karmanye vadhikaraste ma phaleshu kadachana,\nMa karma-phala-hetur bhur ma te sango 'stv akarmani.", translation: "You have the right to perform your duty, but you are not entitled to the fruits of your actions. Never consider yourself the cause of results, nor be attached to inaction.", keywords: ["stress", "anxiety", "work", "duty", "results", "worry", "expectations", "pressure", "outcome"] },
+            { chapter: 2, verse: 48, sanskrit: "योगस्थः कुरु कर्माणि सङ्गं त्यक्त्वा धनञ्जय।\nसिद्ध्यसिद्ध्योः समो भूत्वा समत्वं योग उच्यते॥", transliteration: "Yoga-sthah kuru karmani sangam tyaktva dhananjaya,\nSiddhy-asiddhyoh samo bhutva samatvam yoga uchyate.", translation: "Perform your actions, O Arjuna, being steadfast in yoga, abandoning attachment, and remaining even-minded in success and failure. Such equanimity is called yoga.", keywords: ["balance", "equanimity", "stress", "success", "failure", "calm", "yoga", "peace", "stability"] },
+            { chapter: 2, verse: 14, sanskrit: "मात्रास्पर्शास्तु कौन्तेय शीतोष्णसुखदुःखदाः।\nआगमापायिनोऽनित्यास्तांस्तितिक्षस्व भारत॥", transliteration: "Matra-sparshas tu kaunteya shitoshna-sukha-duhkha-dah,\nAgamapayino 'nityas tams titikshasva bharata.", translation: "O son of Kunti, the contact of the senses with their objects gives rise to feelings of cold and heat, pleasure and pain. These are temporary; they come and go. Bear them patiently, O Bharata.", keywords: ["stress", "pain", "suffering", "temporary", "patience", "endurance", "hardship", "tough", "difficult"] },
+            { chapter: 5, verse: 29, sanskrit: "भोक्तारं यज्ञतपसां सर्वलोकमहेश्वरम्।\nसुहृदं सर्वभूतानां ज्ञात्वा मां शान्तिमृच्छति॥", transliteration: "Bhoktaram yajna-tapasam sarva-loka-maheshvaram,\nSuhridam sarva-bhutanam jnatva mam shantim richchhati.", translation: "One who knows Me as the enjoyer of all sacrifices and austerities, the Supreme Lord of all worlds, and the well-wisher of all beings, attains peace.", keywords: ["peace", "calm", "tranquility", "serenity", "stress", "anxiety", "surrender", "God", "divine"] },
+            { chapter: 6, verse: 7, sanskrit: "जितात्मनः प्रशान्तस्य परमात्मा समाहितः।\nशीतोष्णसुखदुःखेषु तथा मानापमानयोः॥", transliteration: "Jitatmanah prashantasya paramatma samahitah,\nShitoshna-sukha-duhkheshu tatha manapama-nayoh.", translation: "For one who has conquered the mind, the Supreme Self is already reached in peace and equanimity, whether in cold or heat, pleasure or pain, honor or dishonor.", keywords: ["peace", "mind", "control", "equanimity", "calm", "inner peace", "meditation", "balance"] },
+
+            // ---- ANGER / FRUSTRATION ----
+            { chapter: 2, verse: 62, sanskrit: "ध्यायतो विषयान्पुंसः सङ्गस्तेषूपजायते।\nसङ्गात्संजायते कामः कामात्क्रोधोऽभिजायते॥", transliteration: "Dhyayato vishayan pumsah sangas teshupajayate,\nSangat sanjayate kamah kamat krodho 'bhijayate.", translation: "While contemplating sense objects, a person develops attachment to them. From attachment arises desire, and from unfulfilled desire, anger is born.", keywords: ["anger", "frustration", "desire", "attachment", "rage", "temper", "irritation", "emotion"] },
+            { chapter: 2, verse: 63, sanskrit: "क्रोधाद्भवति सम्मोहः सम्मोहात्स्मृतिविभ्रमः।\nस्मृतिभ्रंशाद्बुद्धिनाशो बुद्धिनाशात्प्रणश्यति॥", transliteration: "Krodhad bhavati sammohah sammohat smriti-vibhramah,\nSmriti-bhramshad buddhi-nasho buddhi-nashat pranashyati.", translation: "From anger arises delusion; from delusion, loss of memory; from loss of memory, destruction of intellect; and from destruction of intellect, one is ruined.", keywords: ["anger", "frustration", "destruction", "rage", "temper", "control", "intellect", "emotion"] },
+            { chapter: 16, verse: 21, sanskrit: "त्रिविधं नरकस्येदं द्वारं नाशनमात्मनः।\nकामः क्रोधस्तथा लोभस्तस्मादेतत्त्रयं त्यजेत्॥", transliteration: "Tri-vidham narakasyedam dvaram nashanam atmanah,\nKamah krodhas tatha lobhas tasmad etat trayam tyajet.", translation: "There are three gates leading to hell — lust, anger, and greed. Every sane person should give these up, for they lead to the degradation of the soul.", keywords: ["anger", "greed", "lust", "frustration", "negative", "sin", "control", "self-discipline"] },
+
+            // ---- CAREER / PURPOSE / DUTY ----
+            { chapter: 3, verse: 35, sanskrit: "श्रेयान्स्वधर्मो विगुणः परधर्मात्स्वनुष्ठितात्।\nस्वधर्मे निधनं श्रेयः परधर्मो भयावहः॥", transliteration: "Shreyan sva-dharmo vigunah para-dharmat svanushthitat,\nSva-dharme nidhanam shreyah para-dharmo bhayavahah.", translation: "It is better to perform one's own duty imperfectly than to master another's duty perfectly. It is better to die doing one's own duty; another's duty is fraught with danger.", keywords: ["career", "purpose", "duty", "dharma", "calling", "profession", "life purpose", "job", "work", "direction"] },
+            { chapter: 18, verse: 45, sanskrit: "स्वे स्वे कर्मण्यभिरतः संसिद्धिं लभते नरः।\nस्वकर्मनिरतः सिद्धिं यथा विन्दति तच्छृणु॥", transliteration: "Sve sve karmany abhiratah samsiddhim labhate narah,\nSva-karma-niratah siddhim yatha vindati tach chhrinu.", translation: "Each person can attain perfection by dedicating themselves to their own duty. Listen now how one attains perfection by being devoted to their natural work.", keywords: ["career", "purpose", "perfection", "work", "success", "duty", "dharma", "calling", "growth"] },
+            { chapter: 3, verse: 19, sanskrit: "तस्मादसक्तः सततं कार्यं कर्म समाचर।\nअसक्तो ह्याचरन्कर्म परमाप्नोति पूरुषः॥", transliteration: "Tasmad asaktah satatam karyam karma samachara,\nAsakto hy acharan karma param apnoti purushah.", translation: "Therefore, without attachment, always perform your duty, for by working without attachment, one attains the Supreme.", keywords: ["career", "work", "duty", "detachment", "action", "purpose", "excellence", "selfless"] },
+            { chapter: 11, verse: 33, sanskrit: "तस्मात्त्वमुत्तिष्ठ यशो लभस्व\nजित्वा शत्रून्भुङ्क्ष्व राज्यं समृद्धम्।\nमयैवैते निहताः पूर्वमेव\nनिमित्तमात्रं भव सव्यसाचिन्॥", transliteration: "Tasmat tvam uttishtha yasho labhasva,\nJitva shatrun bhunkshva rajyam samriddham,\nMayaivaite nihatah purvam eva,\nNimitta-matram bhava savyasachin.", translation: "Therefore arise, O Arjuna, and attain glory. Conquer your enemies and enjoy a prosperous kingdom. These warriors have already been destroyed by My arrangement; you are merely an instrument.", keywords: ["courage", "career", "purpose", "action", "arise", "motivation", "destiny", "fight", "strength"] },
+
+            // ---- ATTACHMENT / LOSS / GRIEF ----
+            { chapter: 2, verse: 22, sanskrit: "वासांसि जीर्णानि यथा विहाय\nनवानि गृह्णाति नरोऽपराणि।\nतथा शरीराणि विहाय जीर्णा-\nन्यन्यानि संयाति नवानि देही॥", transliteration: "Vasamsi jirnani yatha vihaya navani grihnati naro 'parani,\nTatha sharirani vihaya jirnany anyani samyati navani dehi.", translation: "As a person casts off worn-out garments and puts on new ones, so the embodied soul casts off worn-out bodies and enters into new ones.", keywords: ["death", "loss", "grief", "attachment", "letting go", "soul", "impermanence", "passing", "loved one"] },
+            { chapter: 2, verse: 27, sanskrit: "जातस्य हि ध्रुवो मृत्युर्ध्रुवं जन्म मृतस्य च।\nतस्मादपरिहार्येऽर्थे न त्वं शोचितुमर्हसि॥", transliteration: "Jatasya hi dhruvo mrityur dhruvam janma mritasya cha,\nTasmad apariharye 'rthe na tvam shochitum arhasi.", translation: "For one who has been born, death is certain; and for one who has died, birth is certain. Therefore, you should not grieve over the inevitable.", keywords: ["death", "loss", "grief", "mourning", "attachment", "letting go", "acceptance", "cycle", "life"] },
+            { chapter: 2, verse: 11, sanskrit: "अशोच्यानन्वशोचस्त्वं प्रज्ञावादांश्च भाषसे।\nगतासूनगतासूंश्च नानुशोचन्ति पण्डिताः॥", transliteration: "Ashochyan anva-shochas tvam prajna-vadams cha bhashase,\nGatasun agatasums cha nanushochanti panditah.", translation: "You grieve for those who should not be grieved for, yet you speak words of wisdom. The wise grieve neither for the living nor for the dead.", keywords: ["grief", "loss", "attachment", "wisdom", "mourning", "death", "sorrow", "sadness", "separation"] },
+
+            // ---- MOTIVATION / LAZINESS ----
+            { chapter: 6, verse: 5, sanskrit: "उद्धरेदात्मनात्मानं नात्मानमवसादयेत्।\nआत्मैव ह्यात्मनो बन्धुरात्मैव रिपुरात्मनः॥", transliteration: "Uddhared atmanatmanam natmanam avasadayet,\nAtmaiva hy atmano bandhur atmaiva ripur atmanah.", translation: "One must elevate oneself by one's own mind, and not degrade oneself. The mind alone is the friend of the self, and the mind alone is the enemy of the self.", keywords: ["motivation", "lazy", "laziness", "self-improvement", "discipline", "willpower", "energy", "uplift", "strength", "mind"] },
+            { chapter: 4, verse: 38, sanskrit: "न हि ज्ञानेन सदृशं पवित्रमिह विद्यते।\nतत्स्वयं योगसंसिद्धः कालेनात्मनि विन्दति॥", transliteration: "Na hi jnanena sadrisham pavitram iha vidyate,\nTat svayam yoga-samsiddhah kalenatmani vindati.", translation: "In this world, there is nothing as purifying as knowledge. One who is perfected in yoga finds this knowledge within oneself in due course of time.", keywords: ["motivation", "knowledge", "learning", "wisdom", "growth", "education", "study", "patience", "progress"] },
+            { chapter: 18, verse: 48, sanskrit: "सहजं कर्म कौन्तेय सदोषमपि न त्यजेत्।\nसर्वारम्भा हि दोषेण धूमेनाग्निरिवावृताः॥", transliteration: "Sahajam karma kaunteya sa-dosham api na tyajet,\nSarvarambha hi doshena dhumena-gnir ivavritah.", translation: "One should not abandon duties born of one's nature even if they seem imperfect, O son of Kunti. For all undertakings are covered by some flaw, just as fire is covered by smoke.", keywords: ["motivation", "laziness", "procrastination", "imperfection", "action", "duty", "start", "begin", "effort"] },
+
+            // ---- CONFUSION / DOUBT ----
+            { chapter: 4, verse: 34, sanskrit: "तद्विद्धि प्रणिपातेन परिप्रश्नेन सेवया।\nउपदेक्ष्यन्ति ते ज्ञानं ज्ञानिनस्तत्त्वदर्शिनः॥", transliteration: "Tad viddhi pranipatena pariprashnena sevaya,\nUpadekshyanti te jnanam jnaninas tattva-darshinah.", translation: "Learn the truth by approaching a spiritual teacher. Inquire from them submissively and serve them. The self-realized souls can impart knowledge unto you because they have seen the truth.", keywords: ["confusion", "doubt", "guidance", "teacher", "clarity", "decision", "direction", "lost", "uncertain"] },
+            { chapter: 18, verse: 66, sanskrit: "सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज।\nअहं त्वां सर्वपापेभ्यो मोक्षयिष्यामि मा शुचः॥", transliteration: "Sarva-dharman parityajya mam ekam sharanam vraja,\nAham tvam sarva-papebhyo mokshayishyami ma shuchah.", translation: "Abandon all varieties of dharma and simply surrender unto Me. I shall deliver you from all sinful reactions. Do not fear.", keywords: ["confusion", "doubt", "surrender", "faith", "trust", "fear", "worry", "uncertain", "decision", "lost", "guidance"] },
+            { chapter: 2, verse: 7, sanskrit: "कार्पण्यदोषोपहतस्वभावः\nपृच्छामि त्वां धर्मसम्मूढचेताः।\nयच्छ्रेयः स्यान्निश्चितं ब्रूहि तन्मे\nशिष्यस्तेऽहं शाधि मां त्वां प्रपन्नम्॥", transliteration: "Karpanya-doshopahata-svabhavah pricchami tvam dharma-sammudha-chetah,\nYach chreyah syan nishchitam bruhi tan me shishyas te 'ham shadhi mam tvam prapannam.", translation: "Now I am confused about my duty and have lost all composure because of miserly weakness. I ask You to tell me clearly what is best for me. I am Your disciple. Please instruct me, as I have surrendered unto You.", keywords: ["confusion", "doubt", "lost", "indecision", "help", "guidance", "uncertain", "surrender", "weakness"] },
+
+            // ---- FEAR / WORRY ----
+            { chapter: 4, verse: 10, sanskrit: "वीतरागभयक्रोधा मन्मया मामुपाश्रिताः।\nबहवो ज्ञानतपसा पूता मद्भावमागताः॥", transliteration: "Vita-raga-bhaya-krodha man-maya mam upashritah,\nBahavo jnana-tapasa puta mad-bhavam agatah.", translation: "Being freed from attachment, fear, and anger, fully absorbed in Me, taking refuge in Me, many persons have become purified by the fire of knowledge and have attained My nature.", keywords: ["fear", "worry", "anxiety", "courage", "bravery", "overcome", "scared", "afraid", "future"] },
+            { chapter: 9, verse: 22, sanskrit: "अनन्याश्चिन्तयन्तो मां ये जनाः पर्युपासते।\nतेषां नित्याभियुक्तानां योगक्षेमं वहाम्यहम्॥", transliteration: "Ananyas chintayanto mam ye janah paryupasate,\nTesham nityabhiyuktanam yoga-kshemam vahamy aham.", translation: "For those who always think of Me and worship Me with devotion, I carry what they lack and preserve what they have.", keywords: ["fear", "worry", "protection", "safety", "future", "security", "trust", "faith", "provision", "care"] },
+            { chapter: 12, verse: 15, sanskrit: "यस्मान्नोद्विजते लोको लोकान्नोद्विजते च यः।\nहर्षामर्षभयोद्वेगैर्मुक्तो यः स च मे प्रियः॥", transliteration: "Yasman nodvijate loko lokan nodvijate cha yah,\nHarshamarsha-bhayodvegair mukto yah sa cha me priyah.", translation: "One who does not disturb others and is not disturbed by others, who is free from joy, envy, fear, and anxiety — that person is dear to Me.", keywords: ["fear", "anxiety", "worry", "peace", "calm", "disturbance", "inner peace", "equanimity"] },
+
+            // ---- SELF-DISCIPLINE / MEDITATION ----
+            { chapter: 6, verse: 35, sanskrit: "असंशयं महाबाहो मनो दुर्निग्रहं चलम्।\nअभ्यासेन तु कौन्तेय वैराग्येण च गृह्यते॥", transliteration: "Asanshayam maha-baho mano durnigraham chalam,\nAbhyasena tu kaunteya vairagyena cha grihyate.", translation: "Undoubtedly, O mighty-armed Arjuna, the mind is restless and difficult to control. But it can be restrained by practice and detachment.", keywords: ["mind", "control", "meditation", "discipline", "restless", "focus", "concentration", "practice", "patience"] },
+            { chapter: 6, verse: 26, sanskrit: "यतो यतो निश्चरति मनश्चञ्चलमस्थिरम्।\nततस्ततो नियम्यैतदात्मन्येव वशं नयेत्॥", transliteration: "Yato yato nishcharati manash chanchalam asthiram,\nTatas tato niyamyaitad atmany eva vasham nayet.", translation: "Wherever the restless and unsteady mind wanders, one should bring it back and focus it on the Self.", keywords: ["mind", "meditation", "focus", "wandering", "restless", "discipline", "concentration", "distraction"] },
+
+            // ---- RELATIONSHIPS / FORGIVENESS ----
+            { chapter: 12, verse: 13, sanskrit: "अद्वेष्टा सर्वभूतानां मैत्रः करुण एव च।\nनिर्ममो निरहङ्कारः समदुःखसुखः क्षमी॥", transliteration: "Adveshta sarva-bhutanam maitrah karuna eva cha,\nNirmamo nirahankara sama-duhkha-sukhah kshami.", translation: "One who is free from hatred toward all beings, who is friendly and compassionate, free from ego and possessiveness, equal in joy and sorrow, and forgiving — that person is dear to Me.", keywords: ["relationships", "forgiveness", "compassion", "love", "hatred", "ego", "kindness", "friendship", "empathy", "forgiving"] },
+            { chapter: 6, verse: 9, sanskrit: "सुहृन्मित्रार्युदासीनमध्यस्थद्वेष्यबन्धुषु।\nसाधुष्वपि च पापेषु समबुद्धिर्विशिष्यते॥", transliteration: "Suhrin-mitrary-udasina-madhyastha-dveshya-bandhushu,\nSadhushv api cha papeshu sama-buddhir vishishyate.", translation: "A person who looks upon well-wishers, friends, enemies, neutrals, mediators, the hateful, relatives, saints, and sinners with equal regard is most distinguished.", keywords: ["relationships", "friendship", "enemy", "equality", "judgment", "compassion", "people", "social", "conflict"] },
+
+            // ---- HAPPINESS / CONTENTMENT ----
+            { chapter: 5, verse: 21, sanskrit: "बाह्यस्पर्शेष्वसक्तात्मा विन्दत्यात्मनि यत्सुखम्।\nस ब्रह्मयोगयुक्तात्मा सुखमक्षयमश्नुते॥", transliteration: "Bahya-sparseshv asaktatma vindaty atmani yat sukham,\nSa brahma-yoga-yuktatma sukham akshayam ashnute.", translation: "One who is not attached to external pleasures of the senses finds happiness within the Self. Such a person, united with the Divine through yoga, enjoys eternal bliss.", keywords: ["happiness", "contentment", "joy", "pleasure", "satisfaction", "inner joy", "bliss", "fulfillment"] },
+            { chapter: 2, verse: 66, sanskrit: "नास्ति बुद्धिरयुक्तस्य न चायुक्तस्य भावना।\nन चाभावयतः शान्तिरशान्तस्य कुतः सुखम्॥", transliteration: "Nasti buddhir ayuktasya na chayuktasya bhavana,\nNa chabhavayatah shantir ashantasya kutah sukham.", translation: "There is no wisdom for the uncontrolled, and no meditation for the uncontrolled. Without meditation, there is no peace, and without peace, how can there be happiness?", keywords: ["happiness", "peace", "meditation", "wisdom", "calm", "contentment", "control", "mind"] },
+
+            // ---- FAITH / DEVOTION / SURRENDER ----
+            { chapter: 9, verse: 26, sanskrit: "पत्रं पुष्पं फलं तोयं यो मे भक्त्या प्रयच्छति।\nतदहं भक्त्युपहृतमश्नामि प्रयतात्मनः॥", transliteration: "Patram pushpam phalam toyam yo me bhaktya prayachchhati,\nTad aham bhakty-upahritam ashnami prayatatmanah.", translation: "If anyone offers Me with devotion a leaf, a flower, a fruit, or water, I accept that offering of love from the pure-hearted.", keywords: ["faith", "devotion", "God", "prayer", "offering", "love", "surrender", "worship", "spiritual", "religion"] },
+            { chapter: 7, verse: 8, sanskrit: "रसोऽहमप्सु कौन्तेय प्रभास्मि शशिसूर्ययोः।\nप्रणवः सर्ववेदेषु शब्दः खे पौरुषं नृषु॥", transliteration: "Raso 'ham apsu kaunteya prabhasmi shashi-suryayoh,\nPranavah sarva-vedeshu shabdah khe paurusham nrishu.", translation: "O son of Kunti, I am the taste of water, the light of the sun and moon, the sacred syllable Om in the Vedas, sound in the ether, and ability in man.", keywords: ["faith", "God", "divine", "nature", "presence", "spiritual", "universe", "creation", "wonder"] },
+
+            // ---- SELF-KNOWLEDGE / IDENTITY ----
+            { chapter: 2, verse: 20, sanskrit: "न जायते म्रियते वा कदाचि-\nन्नायं भूत्वा भविता वा न भूयः।\nअजो नित्यः शाश्वतोऽयं पुराणो\nन हन्यते हन्यमाने शरीरे॥", transliteration: "Na jayate mriyate va kadachin nayam bhutva bhavita va na bhuyah,\nAjo nityah shashvato 'yam purano na hanyate hanyamane sharire.", translation: "The soul is never born, nor does it ever die. It has no past, present, or future. It is unborn, eternal, ever-existing, and primeval. The soul is not slain when the body is slain.", keywords: ["soul", "self", "identity", "who am I", "purpose", "eternal", "death", "existence", "consciousness", "spiritual"] },
+            { chapter: 13, verse: 32, sanskrit: "यथा सर्वगतं सौक्ष्म्यादाकाशं नोपलिप्यते।\nसर्वत्रावस्थितो देहे तथात्मा नोपलिप्यते॥", transliteration: "Yatha sarva-gatam saukshm-yad akasham nopalipyate,\nSarvatravasthito dehe tathatma nopalipyate.", translation: "Just as the all-pervading ether is not tainted because of its subtle nature, similarly the soul situated in the body is not tainted.", keywords: ["soul", "self", "purity", "identity", "consciousness", "spirit", "body", "mind", "untouched"] },
+
+            // ---- GENERAL / WISDOM ----
+            { chapter: 4, verse: 7, sanskrit: "यदा यदा हि धर्मस्य ग्लानिर्भवति भारत।\nअभ्युत्थानमधर्मस्य तदात्मानं सृजाम्यहम्॥", transliteration: "Yada yada hi dharmasya glanir bhavati bharata,\nAbhyutthanam adharmasya tadatmanam srijamy aham.", translation: "Whenever there is a decline in righteousness and an increase in unrighteousness, O Arjuna, at that time I manifest Myself.", keywords: ["righteousness", "justice", "truth", "dharma", "evil", "good", "world", "society", "wrong", "right", "hope"] },
+            { chapter: 4, verse: 8, sanskrit: "परित्राणाय साधूनां विनाशाय च दुष्कृताम्।\nधर्मसंस्थापनार्थाय सम्भवामि युगे युगे॥", transliteration: "Paritranaya sadhunam vinashaya cha dushkritam,\nDharma-samsthapanarthaya sambhavami yuge yuge.", translation: "To protect the righteous, to annihilate the wicked, and to re-establish dharma, I appear in every age.", keywords: ["protection", "justice", "righteousness", "hope", "evil", "good", "dharma", "faith", "God"] },
+            { chapter: 18, verse: 63, sanskrit: "इति ते ज्ञानमाख्यातं गुह्याद्गुह्यतरं मया।\nविमृश्यैतदशेषेण यथेच्छसि तथा कुरु॥", transliteration: "Iti te jnanam akhyatam guhyad guhyataram maya,\nVimrishyaitad asheshena yathechchhasi tatha kuru.", translation: "Thus I have explained to you knowledge that is more secret than all secrets. Reflect on this fully, and then do as you wish.", keywords: ["wisdom", "freedom", "choice", "decision", "knowledge", "think", "reflect", "free will", "guidance"] }
+        ];
+
+        // ============ TOPIC-TO-KEYWORD MAPPING ============
+        const topicKeywords = {
+            stress: ["stress", "anxiety", "worried", "tension", "overwhelmed", "pressure", "nervous", "panic"],
+            anger: ["anger", "frustrated", "frustration", "rage", "temper", "irritated", "mad", "furious", "annoyed"],
+            career: ["career", "job", "work", "purpose", "calling", "profession", "direction", "confused about life", "what should i do"],
+            attachment: ["attachment", "loss", "grief", "let go", "letting go", "death", "separation", "missing", "departed", "loved one"],
+            motivation: ["motivation", "lazy", "laziness", "procrastination", "unmotivated", "energy", "tired", "drive", "effort", "give up"],
+            confusion: ["confusion", "doubt", "confused", "uncertain", "indecision", "clarity", "lost", "direction", "which path"],
+            peace: ["peace", "calm", "tranquility", "serenity", "inner peace", "meditation", "quiet", "harmony", "stillness"],
+            fear: ["fear", "worry", "scared", "afraid", "anxious", "future", "unknown", "terror", "dread"]
+        };
+
+        // ============ VERSE SEARCH ENGINE ============
+        function findRelevantVerses(userText, topicKey = null) {
+            const text = userText.toLowerCase();
+            let scores = bgVerses.map((verse, index) => {
+                let score = 0;
+                // Check keyword matches
+                verse.keywords.forEach(kw => {
+                    if (text.includes(kw.toLowerCase())) {
+                        score += 3;
+                    }
+                });
+
+                // Check topic keywords if a topic was selected
+                if (topicKey && topicKeywords[topicKey]) {
+                    topicKeywords[topicKey].forEach(kw => {
+                        if (verse.keywords.includes(kw)) {
+                            score += 5;
+                        }
+                    });
+                }
+
+                // Partial word matches
+                const words = text.split(/\s+/);
+                words.forEach(word => {
+                    if (word.length > 3) {
+                        verse.keywords.forEach(kw => {
+                            if (kw.includes(word) || word.includes(kw)) {
+                                score += 1;
+                            }
+                        });
+                    }
+                });
+
+                return { verse, score, index };
+            });
+
+            // Sort by score descending
+            scores.sort((a, b) => b.score - a.score);
+
+            // Return top 2–3 relevant verses (at least 1)
+            const topVerses = scores.filter(s => s.score > 0).slice(0, 3);
+
+            // If no matches, return general wisdom verses
+            if (topVerses.length === 0) {
+                return [bgVerses[0], bgVerses[bgVerses.length - 1]]; // karma yoga + free will
+            }
+
+            return topVerses.map(s => s.verse);
+        }
+
+        // ============ SYSTEM PROMPT WITH VERSE CONTEXT ============
+        function getSystemPrompt(verseContext) {
+            return `You are acting as Lord Krishna from the Bhagavad Gita, providing guidance to the user in a calm, wise, and compassionate manner. You respond ONLY based on the Bhagavad Gita.
+
+IMPORTANT: You have been provided with specific verses from the Bhagavad Gita below. You MUST use ONLY these provided verses in your response. Do NOT invent or fabricate any verse, Sanskrit text, transliteration, or translation. Use the exact text provided.
+
+=== PROVIDED VERSES ===
+${verseContext}
+=== END OF PROVIDED VERSES ===
+
+Rules:
+1. Always greet the user by their name: "${userName}".
+2. Choose the MOST relevant verse from the PROVIDED VERSES above for the user's question.
+3. Use the EXACT Sanskrit text from the provided verse — do NOT modify it.
+4. Use the EXACT transliteration from the provided verse — do NOT modify it.
+5. Use the EXACT translation from the provided verse — do NOT modify it.
+6. Write a personalized, practical, life-application advice inspired by the chosen verse, addressing ${userName} by name and relating it to their specific question.
+7. Tone must be gentle, wise, calm, and respectful — like Lord Krishna speaking.
+8. Never pretend to predict the future or make direct personal commands.
+9. You MUST format your response EXACTLY as this JSON (no markdown, no code fences, just raw JSON):
+{"sanskrit":"<EXACT Sanskrit from provided verse>","transliteration":"<EXACT transliteration from provided verse>","translation":"<EXACT translation from provided verse>","advice":"<your personalized advice addressing ${userName} by name, relating to their question>","reference":"Bhagavad Gita, Chapter <chapter>, Verse <verse>"}
+10. ONLY output the JSON object. No other text before or after.
+11. The reference must match the chapter and verse number from the provided verse you chose.`;
+        }
+
+        function formatVerseContext(verses) {
+            return verses.map((v, i) => {
+                return `Verse ${i + 1} — Chapter ${v.chapter}, Verse ${v.verse}:
+Sanskrit: ${v.sanskrit}
+Transliteration: ${v.transliteration}
+Translation: ${v.translation}`;
+            }).join('\n\n');
+        }
+
+        // ============ PREMADE QUESTIONS ============
+        const premadeQuestions = {
+            stress: "I'm feeling very stressed and anxious lately. How can I find peace of mind?",
+            anger: "I'm struggling with anger and frustration. How do I control my emotions?",
+            career: "I'm confused about my career and life purpose. What should I do?",
+            attachment: "I'm dealing with loss and attachment. How do I learn to let go?",
+            motivation: "I feel unmotivated and lazy. How can I find energy and inner drive?",
+            confusion: "I'm confused and full of doubt about important decisions. How do I find clarity?",
+            peace: "I want to find inner peace and calm in my chaotic life. How can I achieve it?",
+            fear: "I'm filled with fear and worry about the future. How do I overcome this?"
+        };
+
+        // ============ LOCAL STORAGE HELPERS ============
+        function saveToStorage(key, value) {
+            try {
+                localStorage.setItem(key, JSON.stringify(value));
+            } catch (e) {
+                console.warn('LocalStorage save failed:', e);
+            }
+        }
+
+        function loadFromStorage(key) {
+            try {
+                const val = localStorage.getItem(key);
+                return val ? JSON.parse(val) : null;
+            } catch (e) {
+                console.warn('LocalStorage load failed:', e);
+                return null;
+            }
+        }
+
+        function removeFromStorage(key) {
+            try {
+                localStorage.removeItem(key);
+            } catch (e) {}
+        }
+
+        // ============ PERSISTENCE: SAVE CHAT STATE ============
+        function saveChatState() {
+            saveToStorage(STORAGE_KEYS.chatHistory, chatHistory);
+            const chatMessages = document.getElementById('chatMessages');
+            if (chatMessages) {
+                saveToStorage(STORAGE_KEYS.chatDOM, chatMessages.innerHTML);
+            }
+        }
+
+        function restoreChatState() {
+            const savedHistory = loadFromStorage(STORAGE_KEYS.chatHistory);
+            const savedDOM = loadFromStorage(STORAGE_KEYS.chatDOM);
+
+            if (savedHistory && savedHistory.length > 0) {
+                chatHistory = savedHistory;
+            }
+
+            if (savedDOM) {
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.innerHTML = savedDOM;
+                // Remove any lingering typing indicators
+                const typing = chatMessages.querySelector('#typingIndicator');
+                if (typing) typing.remove();
+                // Re-fix all Krishna avatar images that may have failed
+                fixKrishnaAvatars(chatMessages);
+                scrollToBottom();
+                return true;
+            }
+            return false;
+        }
+
+        function fixKrishnaAvatars(container) {
+            const avatars = container.querySelectorAll('.message.ai .message-avatar');
+            avatars.forEach(avatar => {
+                // If avatar has no img or img failed, re-insert it
+                let img = avatar.querySelector('img');
+                if (!img) {
+                    avatar.innerHTML = getKrishnaAvatarHTML();
+                } else {
+                    // Re-attach onerror handler (lost during innerHTML restore)
+                    img.onerror = function() {
+                        this.onerror = null;
+                        this.parentElement.innerHTML = '🙏';
+                    };
+                    // Force reload by resetting src
+                    const currentSrc = img.getAttribute('src');
+                    if (currentSrc) {
+                        img.src = '';
+                        img.src = currentSrc;
+                    }
+                }
+            });
+        }
+
+        function clearChatHistory() {
+            chatHistory = [];
+            removeFromStorage(STORAGE_KEYS.chatHistory);
+            removeFromStorage(STORAGE_KEYS.chatDOM);
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML = '';
+            showWelcomeMessage();
+            showToast('Chat history cleared 🗑️');
+        }
+
+        // ============ ONBOARDING WITH PERSISTENCE ============
+        function startJourney() {
+            const nameInput = document.getElementById('nameInput');
+            const name = nameInput.value.trim();
+
+            if (!name) {
+                nameInput.style.borderColor = '#ef4444';
+                nameInput.style.animation = 'shake 0.5s ease';
+                showToast('Please enter your name to begin 🙏');
+                setTimeout(() => {
+                    nameInput.style.borderColor = 'rgba(14, 165, 233, 0.25)';
+                    nameInput.style.animation = '';
+                }, 1000);
+                return;
+            }
+
+            userName = name;
+            saveToStorage(STORAGE_KEYS.userName, userName);
+            enterChatPage(false);
+        }
+
+        function enterChatPage(isReturning) {
+            document.getElementById('landing-page').style.display = 'none';
+            const chatPage = document.getElementById('chat-page');
+            chatPage.style.display = 'flex';
+            chatPage.classList.add('fade-in');
+
+            if (isReturning) {
+                const restored = restoreChatState();
+                if (!restored) {
+                    setTimeout(() => showWelcomeMessage(), 300);
+                }
+            } else {
+                setTimeout(() => showWelcomeMessage(), 500);
+            }
+        }
+
+        // ============ INIT ON PAGE LOAD ============
+        function initApp() {
+            // Check saved name
+            const savedName = loadFromStorage(STORAGE_KEYS.userName);
+            micPermissionGranted = loadFromStorage(STORAGE_KEYS.micGranted) || false;
+
+            if (savedName) {
+                userName = savedName;
+                enterChatPage(true);
+            } else {
+                document.getElementById('nameInput').focus();
+            }
+        }
+
+        document.getElementById('nameInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') startJourney();
+        });
+
+        document.getElementById('textInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendTextMessage();
+        });
+
+        // ============ WELCOME MESSAGE ============
+        function showWelcomeMessage() {
+            const welcomeHTML = `
+                <div class="welcome-text">
+                    <strong>🙏 Namaste, ${escapeHTML(userName)}!</strong><br><br>
+                    I am your Bhagavad Gita companion, here to share the timeless wisdom of Lord Krishna to help you navigate life's challenges.<br><br>
+                    You can:<br>
+                    • <strong>Speak</strong> your question using the microphone 🎙️<br>
+                    • <strong>Type</strong> your question in the text box ⌨️<br>
+                    • Tap a <strong>Quick Guidance</strong> topic below ✨<br><br>
+                    <em style="color: var(--sky-darker);">What's on your mind today, ${escapeHTML(userName)}?</em>
+                </div>
+            `;
+            addAIMessage(welcomeHTML, true);
+        }
+
+        // ============ MESSAGE HANDLING ============
+        const KRISHNA_IMG = 'images/krishna.png';
+
+        function getKrishnaAvatarHTML() {
+            return `<img src="${KRISHNA_IMG}" alt="Krishna" onerror="this.onerror=null;this.parentElement.innerHTML='🙏';">`;
+        }
+
+        function addAIMessage(content, skipSave = false) {
+            const chatMessages = document.getElementById('chatMessages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message ai animate-in';
+            msgDiv.innerHTML = `
+                <div class="message-header">
+                    <div class="message-avatar">${getKrishnaAvatarHTML()}</div>
+                    <span class="message-name">Lord Krishna</span>
+                </div>
+                <div class="message-bubble">${content}</div>
+            `;
+            chatMessages.appendChild(msgDiv);
+            scrollToBottom();
+            if (!skipSave) {
+                saveChatState();
+            }
+        }
+
+        function addUserMessage(text) {
+            const chatMessages = document.getElementById('chatMessages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message user animate-in';
+            const initial = userName.charAt(0).toUpperCase();
+            msgDiv.innerHTML = `
+                <div class="message-header" style="justify-content: flex-end;">
+                    <span class="message-name">${escapeHTML(userName)}</span>
+                    <div class="message-avatar">${initial}</div>
+                </div>
+                <div class="message-bubble">${escapeHTML(text)}</div>
+            `;
+            chatMessages.appendChild(msgDiv);
+            scrollToBottom();
+            saveChatState();
+        }
+
+        function escapeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function showTypingIndicator() {
+            const chatMessages = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message ai animate-in';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="message-header">
+                    <div class="message-avatar">${getKrishnaAvatarHTML()}</div>
+                    <span class="message-name">Lord Krishna</span>
+                </div>
+                <div class="message-bubble">
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            scrollToBottom();
+        }
+
+        function removeTypingIndicator() {
+            const el = document.getElementById('typingIndicator');
+            if (el) el.remove();
+        }
+
+        function scrollToBottom() {
+            const chatMessages = document.getElementById('chatMessages');
+            setTimeout(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 100);
+        }
+
+        // ============ VERSE CARD BUILDER ============
+        function buildVerseCard(data) {
+            const ref = data.reference || 'Bhagavad Gita';
+            return `
+                <div class="verse-card">
+                    <span class="verse-label">📖 ${escapeHTML(ref)}</span>
+                    <div class="verse-sanskrit">${escapeHTML(data.sanskrit)}</div>
+                    <div class="verse-transliteration">${escapeHTML(data.transliteration)}</div>
+                    <div class="verse-translation">"${escapeHTML(data.translation)}"</div>
+                    <div class="verse-advice">
+                        <div class="verse-advice-label">🙏 Guidance for You</div>
+                        ${escapeHTML(data.advice)}
+                    </div>
+                    <div class="verse-reference">— ${escapeHTML(ref)}</div>
+                </div>
+            `;
+        }
+
+        // ============ OPENROUTER API ============
+        async function getAIResponse(userText, topicKey = null) {
+            // 1. Find relevant verses from our Bg database
+            const relevantVerses = findRelevantVerses(userText, topicKey);
+            const verseContext = formatVerseContext(relevantVerses);
+
+            // 2. Build messages with verse context
+            chatHistory.push({ role: 'user', content: userText });
+
+            const messages = [
+                { role: 'system', content: getSystemPrompt(verseContext) },
+                ...chatHistory.slice(-10)
+            ];
+
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${API_KEY}`,
+                    'HTTP-Referer': window.location.href,
+                    'X-Title': 'Krishna Wisdom - Bhagavad Gita AI'
+                },
+                body: JSON.stringify({
+                    model: MODEL,
+                    messages: messages,
+                    temperature: 0.7,
+                    max_tokens: 1200
+                })
+            });
+
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.error?.message || `API error: ${response.status}`);
+            }
+
+            const result = await response.json();
+            const content = result.choices?.[0]?.message?.content;
+
+            if (!content) {
+                throw new Error('Empty response from AI');
+            }
+
+            chatHistory.push({ role: 'assistant', content: content });
+
+            return parseAIResponse(content);
+        }
+
+        function parseAIResponse(content) {
+            let cleaned = content.trim();
+
+            // Remove markdown code fences if present
+            cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
+            cleaned = cleaned.trim();
+
+            try {
+                const parsed = JSON.parse(cleaned);
+                if (parsed.sanskrit && parsed.transliteration && parsed.translation && parsed.advice) {
+                    return { type: 'verse', data: parsed };
+                }
+            } catch (e) {
+                // Try to find JSON within the text
+                const jsonMatch = cleaned.match(/\{[\s\S]*"sanskrit"[\s\S]*"advice"[\s\S]*\}/);
+                if (jsonMatch) {
+                    try {
+                        const parsed = JSON.parse(jsonMatch[0]);
+                        if (parsed.sanskrit && parsed.advice) {
+                            return { type: 'verse', data: parsed };
+                        }
+                    } catch (e2) {}
+                }
+            }
+
+            // Fallback: display as plain text
+            return { type: 'text', data: cleaned };
+        }
+
+        // ============ PROCESS QUESTION ============
+        async function processQuestion(text, topicKey = null) {
+            if (isProcessing) return;
+            isProcessing = true;
+
+            addUserMessage(text);
+
+            await new Promise(r => setTimeout(r, 300));
+            showTypingIndicator();
+
+            try {
+                const response = await getAIResponse(text, topicKey);
+                removeTypingIndicator();
+
+                if (response.type === 'verse') {
+                    const verseCardHTML = buildVerseCard(response.data);
+                    addAIMessage(verseCardHTML);
+                } else {
+                    addAIMessage(`<div style="line-height:1.7; white-space:pre-wrap;">${escapeHTML(response.data)}</div>`);
+                }
+            } catch (error) {
+                removeTypingIndicator();
+                console.error('API Error:', error);
+                const errorHTML = `
+                    <div class="error-card">
+                        <strong>🙏 Unable to connect to divine wisdom</strong>
+                        ${escapeHTML(error.message)}<br><br>
+                        Please try again in a moment, ${escapeHTML(userName)}.
+                    </div>
+                `;
+                addAIMessage(errorHTML);
+            }
+
+            isProcessing = false;
+        }
+
+        // ============ PREMADE ============
+        function askPremade(topic) {
+            if (isProcessing) return;
+            const question = premadeQuestions[topic];
+            processQuestion(question, topic);
+        }
+
+        // ============ TEXT INPUT ============
+        function sendTextMessage() {
+            const input = document.getElementById('textInput');
+            const text = input.value.trim();
+            if (!text || isProcessing) return;
+            input.value = '';
+            processQuestion(text);
+        }
+
+        // ============ VOICE INPUT (with permission persistence) ============
+        function toggleVoice() {
+            if (isProcessing) return;
+
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                showToast('Voice input is not supported in this browser. Please use Chrome.', true);
+                return;
+            }
+
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        function startRecording() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+            recognition.continuous = false;
+
+            recognition.onstart = () => {
+                isRecording = true;
+                // Mark mic permission as granted
+                if (!micPermissionGranted) {
+                    micPermissionGranted = true;
+                    saveToStorage(STORAGE_KEYS.micGranted, true);
+                }
+                document.getElementById('micBtn').classList.add('recording');
+                document.getElementById('textInputWrapper').style.display = 'none';
+                document.getElementById('speechStatus').classList.add('active');
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                stopRecording();
+                if (transcript.trim()) {
+                    processQuestion(transcript);
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech error:', event.error);
+                stopRecording();
+                if (event.error === 'no-speech') {
+                    showToast("I didn't hear anything. Please try again. 🎙️");
+                } else if (event.error === 'not-allowed') {
+                    micPermissionGranted = false;
+                    saveToStorage(STORAGE_KEYS.micGranted, false);
+                    showToast("Microphone access denied. Please allow microphone in browser settings. 🔒", true);
+                } else if (event.error === 'aborted') {
+                    // User cancelled, do nothing
+                } else {
+                    showToast("Voice error. Please try again or type your question.");
+                }
+            };
+
+            recognition.onend = () => {
+                stopRecording();
+            };
+
+            try {
+                recognition.start();
+            } catch (e) {
+                showToast("Could not start voice input. Please try again.");
+            }
+        }
+
+        function stopRecording() {
+            isRecording = false;
+            document.getElementById('micBtn').classList.remove('recording');
+            document.getElementById('textInputWrapper').style.display = 'block';
+            document.getElementById('speechStatus').classList.remove('active');
+            if (recognition) {
+                try { recognition.stop(); } catch (e) {}
+                recognition = null;
+            }
+        }
+
+        function cancelSpeech() {
+            stopRecording();
+            showToast("Voice input cancelled");
+        }
+
+        // ============ DEVELOPER MODAL ============
+        function openDevModal() {
+            document.getElementById('devModal').classList.add('active');
+        }
+
+        function closeDevModal() {
+            document.getElementById('devModal').classList.remove('active');
+        }
+
+        // Close modal on overlay click
+        document.getElementById('devModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('devModal')) {
+                closeDevModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeDevModal();
+            }
+        });
+
+        // ============ TOAST ============
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show' + (isError ? ' error' : '');
+            setTimeout(() => { toast.className = 'toast'; }, 3500);
+        }
+
+        // ============ DARK/LIGHT THEME TOGGLE ============
+        const THEME_STORAGE_KEY = 'krishna_wisdom_theme';
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            updateThemeUI(newTheme);
+            saveToStorage(THEME_STORAGE_KEY, newTheme);
+        }
+
+        function updateThemeUI(theme) {
+            // Update chat page toggle
+            const icon = document.getElementById('themeIcon');
+            const label = document.getElementById('themeLabel');
+            // Update landing page toggle
+            const landingIcon = document.getElementById('landingThemeIcon');
+            const landingLabel = document.getElementById('landingThemeLabel');
+
+            if (theme === 'dark') {
+                if (icon) icon.textContent = '☀️';
+                if (label) label.textContent = 'Light';
+                if (landingIcon) landingIcon.textContent = '☀️';
+                if (landingLabel) landingLabel.textContent = 'Light';
+            } else {
+                if (icon) icon.textContent = '🌙';
+                if (label) label.textContent = 'Dark';
+                if (landingIcon) landingIcon.textContent = '🌙';
+                if (landingLabel) landingLabel.textContent = 'Dark';
+            }
+        }
+
+        function loadSavedTheme() {
+            const savedTheme = loadFromStorage(THEME_STORAGE_KEY);
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                updateThemeUI('dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                updateThemeUI('light');
+            }
+        }
+
+        // Load theme immediately
+        loadSavedTheme();
+
+        // ============ PARTICLES ============
+        function createParticles() {
+            const landing = document.getElementById('landing-page');
+            if (!landing || landing.style.display === 'none') return;
+            for (let i = 0; i < 35; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                const dur = 4 + Math.random() * 6;
+                particle.style.animation = `floatParticle ${dur}s ease-in-out infinite`;
+                particle.style.animationDelay = Math.random() * 4 + 's';
+                const size = 2 + Math.random() * 4;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                if (Math.random() > 0.5) {
+                    particle.style.background = `rgba(14, 165, 233, ${0.15 + Math.random() * 0.2})`;
+                } else {
+                    particle.style.background = `rgba(245, 158, 11, ${0.12 + Math.random() * 0.18})`;
+                }
+                landing.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // ============ INITIALIZE APP ============
+        window.addEventListener('load', () => {
+            loadSavedTheme();
+            initApp();
+        });
+    </script>
+</body>
+</html>
